@@ -1,6 +1,6 @@
 # Custom
 log/
-dataset/
+# dataset/
 pretrain/
 save/
 savefig/
