@@ -45,9 +45,18 @@ class OurGAN_D(nn.Module):
         # ])
 
         # TODO consider adding activation/normalization?
-        self.highway = nn.Linear(self.embed_dim, self.embed_dim)
-        self.feature2out = nn.Linear(self.embed_dim, 100)
-        self.out2logits = nn.Linear(100, 1)
+        self.highway = nn.Sequential(
+            nn.Linear(self.embed_dim, self.embed_dim),
+            nn.ReLU()
+        )
+        self.feature2out = nn.Sequential(
+            nn.Linear(self.embed_dim, 100),
+            nn.ReLU()
+        )
+        self.out2logits = nn.Sequential(
+            nn.Linear(100, 1),
+            nn.Sigmoid()
+        )
         # self.dropout = nn.Dropout(dropout)
 
         self.init_params()
