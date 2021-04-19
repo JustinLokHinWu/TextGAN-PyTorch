@@ -76,7 +76,7 @@ class OurGAN_D(nn.Module):
         encodings[:, 0::2] = sin_vals
         encodings[:, 1::2] = cos_vals
 
-        # Num patches x Embedding dimension
+        # Seq len x Embedding dimension
         encodings = encodings.cuda()
 
         return encodings

@@ -23,6 +23,11 @@ class OurGANInstructor(BasicInstructor):
     def __init__(self, opt):
         super(OurGANInstructor, self).__init__(opt)
 
+        self.gpu = cfg.CUDA
+
+        # Gradient penalty # TODO consider moving to cfg
+        self.lambda = 10
+
         # generator, discriminator
         self.gen = OurGAN_G(cfg.mem_slots, cfg.num_heads, cfg.head_size, cfg.gen_embed_dim, cfg.gen_hidden_dim,
                             cfg.vocab_size, cfg.max_seq_len, cfg.padding_idx, gpu=cfg.CUDA)
@@ -129,6 +134,10 @@ class OurGANInstructor(BasicInstructor):
             d_out_fake = self.dis(gen_samples)
             _, d_loss = get_losses(d_out_real, d_out_fake, cfg.loss_type)
 
+            # Add gradient penalty
+            gp = self.calc_gradient_penalty(self.dis, real_samples, gen_samples, cfg.batch_size)
+            d_loss = d_loss + gp
+
             self.optimize(self.dis_opt, d_loss, self.dis)
             total_loss += d_loss.item()
 
@@ -144,3 +153,30 @@ class OurGANInstructor(BasicInstructor):
         if model is not None:
             torch.nn.utils.clip_grad_norm_(model.parameters(), cfg.clip_norm)
         opt.step()
+
+    def calc_gradient_penalty(self, netD, real_data, fake_data, batch_size):
+        # Based on https://github.com/caogang/wgan-gp/blob/master/gan_language.py
+        alpha = torch.rand(batch_size, 1, 1)
+        alpha = alpha.expand(real_data.size())
+        alpha = alpha.cuda() if self.gpu else alpha
+
+        interpolates = alpha * real_data + ((1 - alpha) * fake_data)
+
+        if self.gpu:
+            interpolates = interpolates.cuda()
+        interpolates = torch.autograd.Variable(interpolates, requires_grad=True)
+
+        disc_interpolates = netD(interpolates)
+
+        # TODO: Make ConvBackward diffentiable
+        gradients = torch.autograd.grad(
+            outputs=disc_interpolates,
+            inputs=interpolates,
+            grad_outputs=torch.ones(disc_interpolates.size()).cuda()
+                if self.gpu else torch.ones(disc_interpolates.size()),
+            create_graph=True,
+            retain_graph=True,
+            only_inputs=True)[0]
+
+        gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean() * self.lambda
+        return gradient_penalty
