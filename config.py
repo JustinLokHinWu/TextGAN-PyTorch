@@ -116,8 +116,8 @@ num_rep = 64  # RelGAN
 
 # ===OurGan===
 # TODO experiment with parameters
-n_heads = 5
-n_transformer_layers = 3
+# n_heads = 5
+# n_transformer_layers = 3
 
 # ===log===
 log_time_str = strftime("%m%d_%H%M_%S", localtime())
