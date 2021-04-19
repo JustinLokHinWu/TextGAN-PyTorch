@@ -46,7 +46,7 @@ class OurGAN_D(nn.Module):
 
         # TODO consider adding activation/normalization?
         self.highway = nn.Sequential(
-            nn.Linear(self.embed_dim, self.embed_dim),
+            nn.Linear(self.embed_dim * self.max_seq_len, self.embed_dim),
             nn.ReLU()
         )
         self.feature2out = nn.Sequential(
@@ -71,7 +71,7 @@ class OurGAN_D(nn.Module):
 
         trans = self.transformer(emb) # batch * max_seq_len * embed_dim
 
-        x = self.highway(trans) #life is a highway.
+        x = self.highway(trans.flatten(start_dim=1)) #life is a highway.
         x = self.feature2out(x)
         x = self.out2logits(x)
         # logits = self.out2logits(pred).squeeze(1)  # [batch_size * num_rep]
