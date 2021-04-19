@@ -86,8 +86,8 @@ class OurGAN_D(nn.Module):
         emb = self.embeddings(inp) # batch_size * max_seq_len * embed_dim
 
         pos_encoding = self.positional_encoding()
-        if self.gpu:
-            pos_encoding = pos_encoding.cuda()
+        #if self.gpu:
+        #    pos_encoding = pos_encoding.cuda()
 
         emb = emb + pos_encoding
 
