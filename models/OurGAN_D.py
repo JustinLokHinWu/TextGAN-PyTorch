@@ -61,6 +61,8 @@ class OurGAN_D(nn.Module):
         # self.dropout = nn.Dropout(dropout)
 
         self.init_params()
+
+        self.pos_encoding = self.positional_encoding()
     
     def positional_encoding(self):
         p_idx = torch.arange(self.max_seq_len)[..., None]
@@ -75,6 +77,8 @@ class OurGAN_D(nn.Module):
         encodings[:, 1::2] = cos_vals
 
         # Num patches x Embedding dimension
+        encodings = encodings.cuda()
+
         return encodings
 
     def forward(self, inp):
@@ -85,11 +89,8 @@ class OurGAN_D(nn.Module):
         """
         emb = self.embeddings(inp) # batch_size * max_seq_len * embed_dim
 
-        pos_encoding = self.positional_encoding()
-        #if self.gpu:
-        #    pos_encoding = pos_encoding.cuda()
-
-        emb = emb + pos_encoding
+        bs, seqlen = inp.size()
+        emb = emb + pos_encoding[:seqlen]
 
         trans = self.transformer(emb) # batch * max_seq_len * embed_dim
 
