@@ -38,8 +38,10 @@ CUDA = int(True)
 oracle_pretrain = int(True)
 gen_pretrain = int(False)
 dis_pretrain = int(False)
-MLE_train_epoch = 150
-ADV_train_epoch = 3000
+MLE_train_epoch = 20
+ADV_train_epoch = 100
+# MLE_train_epoch = 150
+# ADV_train_epoch = 3000
 tips = 'RelGAN experiments'
 
 # ===Oracle or Real===
