@@ -29,6 +29,7 @@ class OurGAN_D(nn.Module):
 
         self.embed_dim = embed_dim
         self.max_seq_len = max_seq_len
+        self.gpu = gpu
         # self.feature_dim = sum(dis_num_filters) 
 
         self.embeddings = nn.Linear(vocab_size, embed_dim, bias=False)
@@ -60,6 +61,21 @@ class OurGAN_D(nn.Module):
         # self.dropout = nn.Dropout(dropout)
 
         self.init_params()
+    
+    def positional_encoding(self):
+        p_idx = torch.arange(self.max_seq_len)[..., None]
+        d_idx = torch.arange(self.embed_dim//2)[None, ...]
+        sincos_term = p_idx / 10000**(2.0 * d_idx / self.embed_dim)
+
+        sin_vals = torch.sin(sincos_term)
+        cos_vals = torch.cos(sincos_term)
+
+        encodings = torch.empty((self.max_seq_len, self.embed_dim))
+        encodings[:, 0::2] = sin_vals
+        encodings[:, 1::2] = cos_vals
+
+        # Num patches x Embedding dimension
+        return encodings
 
     def forward(self, inp):
         """
@@ -68,6 +84,12 @@ class OurGAN_D(nn.Module):
         :return logits: [batch_size * num_rep] (1-D tensor)
         """
         emb = self.embeddings(inp) # batch_size * max_seq_len * embed_dim
+
+        pos_encoding = self.positional_encoding()
+        if self.gpu:
+            pos_encoding = pos_encoding.cuda()
+
+        emb = emb + pos_encoding
 
         trans = self.transformer(emb) # batch * max_seq_len * embed_dim
 
