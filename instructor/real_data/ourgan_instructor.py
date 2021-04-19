@@ -26,7 +26,7 @@ class OurGANInstructor(BasicInstructor):
         # generator, discriminator
         self.gen = OurGAN_G(cfg.mem_slots, cfg.num_heads, cfg.head_size, cfg.gen_embed_dim, cfg.gen_hidden_dim,
                             cfg.vocab_size, cfg.max_seq_len, cfg.padding_idx, gpu=cfg.CUDA)
-        self.dis = OurGAN_D(cfg.dis_embed_dim, cfg.max_seq_len, cfg.num_rep, cfg.vocab_size, cfg.padding_idx,
+        self.dis = OurGAN_D(cfg.dis_embed_dim, cfg.max_seq_len, cfg.vocab_size, cfg.padding_idx, cfg.n_head, cfg.n_transformer_layers,
                             gpu=cfg.CUDA)
         self.init_model()
 

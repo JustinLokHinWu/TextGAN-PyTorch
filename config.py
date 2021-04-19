@@ -114,6 +114,11 @@ dis_embed_dim = 64
 dis_hidden_dim = 64
 num_rep = 64  # RelGAN
 
+# ===OurGan===
+# TODO experiment with parameters
+n_heads = 5
+n_transformer_layers = 3
+
 # ===log===
 log_time_str = strftime("%m%d_%H%M_%S", localtime())
 log_filename = strftime("log/log_%s" % log_time_str)
