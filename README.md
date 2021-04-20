@@ -9,6 +9,12 @@ cd run
 python3 run_ourgan.py 1 0
 ```
 
+# Files
+Since we use TextGAN as the base of our project, our files are interspersed with files used for other models. The relevant files that we have created are:
+* instructor/real_data/ourgan.py
+* models/OurGAN_D.py
+* models/OurGAN_G.py
+* run/run_ourgan.py
 
 # TextGAN-PyTorch
 
