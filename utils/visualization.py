@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     color_id = 0
     data_name = 'NLL_oracle'
-    if_save = False
+    if_save = True
     # legend_text = log_file_list
 
     assert data_name in title_dict.keys(), 'Error data name'
