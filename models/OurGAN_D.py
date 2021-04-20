@@ -58,6 +58,7 @@ class OurGAN_D(nn.Module):
         self.init_params()
 
         self.pos_encoding = self.positional_encoding()
+        print(self.pos_encoding.shape)
     
     def positional_encoding(self):
         # From Assignment 3
