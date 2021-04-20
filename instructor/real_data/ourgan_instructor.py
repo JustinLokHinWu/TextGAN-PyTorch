@@ -135,8 +135,8 @@ class OurGANInstructor(BasicInstructor):
             _, d_loss = get_losses(d_out_real, d_out_fake, cfg.loss_type)
 
             # Add gradient penalty
-            gp = self.calc_gradient_penalty(self.dis, real_samples, gen_samples, cfg.batch_size)
-            d_loss = d_loss + gp
+            # gp = self.calc_gradient_penalty(self.dis, real_samples, gen_samples, cfg.batch_size)
+            # d_loss = d_loss + gp
 
             self.optimize(self.dis_opt, d_loss, self.dis)
             total_loss += d_loss.item()
@@ -168,7 +168,6 @@ class OurGANInstructor(BasicInstructor):
 
         disc_interpolates = netD(interpolates)
 
-        # TODO: Make ConvBackward diffentiable
         gradients = torch.autograd.grad(
             outputs=disc_interpolates,
             inputs=interpolates,
