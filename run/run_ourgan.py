@@ -38,8 +38,8 @@ CUDA = int(True)
 oracle_pretrain = int(True)
 gen_pretrain = int(False)
 dis_pretrain = int(False)
-MLE_train_epoch = 20 # TODO undo
-ADV_train_epoch = 1000
+MLE_train_epoch = 20
+ADV_train_epoch = 200
 tips = 'OurGAN experiments'
 
 # ===Oracle or Real===
@@ -74,7 +74,7 @@ head_size = 256
 
 # ===Discriminator===
 ADV_d_step = 5
-dis_embed_dim = 64 # TODO experiment
+dis_embed_dim = 64
 dis_hidden_dim = 64
 num_rep = 64
 

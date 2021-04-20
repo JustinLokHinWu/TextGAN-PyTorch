@@ -1,5 +1,4 @@
 # CSC413 Final Project: Text Generation using Relational Memory and Transformer Discriminators
-<!-- TODO choose title -->
 Our model builds on **RelGAN** - [RelGAN: Relational Generative Adversarial Networks for Text Generation](https://openreview.net/forum?id=rJedV3R5tm). We build on top of the [TextGan repository](https://github.com/williamSYSU/TextGAN-PyTorch), and use much of their RelGAN implementation and test/train code as the basis of our model. Our primary contribution is a novel discriminator architecture, using multihead-attention instead of convolution for extracting and processing sentence features.
 
 ## Run instructions
