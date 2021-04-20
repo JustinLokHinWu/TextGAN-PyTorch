@@ -21,25 +21,6 @@ from models.discriminator import CNNDiscriminator
 # dis_filter_sizes = [2, 3, 4, 5]
 # dis_num_filters = [300, 300, 300, 300]
 
-class PositionalEncoding(nn.Module):
-    # From pytorch documentation:
-    # https://pytorch.org/tutorials/beginner/transformer_tutorial.html
-    def __init__(self, d_model, dropout=0.1, max_len=5000):
-        super(PositionalEncoding, self).__init__()
-        self.dropout = nn.Dropout(p=dropout)
-
-        pe = torch.zeros(max_len, d_model)
-        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
-        pe = pe.unsqueeze(0).transpose(0, 1)
-        self.register_buffer('pe', pe)
-
-    def forward(self, x):
-        x = x + self.pe[:x.size(0), :]
-        return self.dropout(x)
-
 n_heads = 4
 n_transformer_layers = 3
 class OurGAN_D(nn.Module):
@@ -52,6 +33,7 @@ class OurGAN_D(nn.Module):
 
         # self.embeddings = nn.Linear(vocab_size, embed_dim, bias=False)
         self.embeddings = nn.Sequential(
+            nn.Dropout(dropout),
             nn.Linear(vocab_size, embed_dim, bias=False),
             nn.Tanh()
         )
@@ -80,8 +62,7 @@ class OurGAN_D(nn.Module):
 
         self.init_params()
 
-        # self.pos_encoding = self.positional_encoding()
-        self.pos_encoding = PositionalEncoding(self.embed_dim, max_len=self.max_seq_len)
+        self.pos_encoding = self.positional_encoding()
     
     def positional_encoding(self):
         # From Assignment 3
@@ -111,9 +92,7 @@ class OurGAN_D(nn.Module):
 
         seqlen = inp.size(1)
 
-        # TODO clean
-        # emb = emb + self.pos_encoding[:seqlen]
-        emb = self.pos_encoding(emb)
+        emb = emb + self.pos_encoding[:seqlen]
 
         trans = self.transformer(emb) # batch * max_seq_len * embed_dim
 

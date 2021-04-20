@@ -74,7 +74,7 @@ head_size = 256
 
 # ===Discriminator===
 ADV_d_step = 5
-dis_embed_dim = 16 # TODO experiment
+dis_embed_dim = 64 # TODO experiment
 dis_hidden_dim = 64
 num_rep = 64
 
