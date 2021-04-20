@@ -31,7 +31,8 @@ class OurGAN_D(nn.Module):
         self.max_seq_len = max_seq_len
         self.gpu = gpu
 
-        self.embeddings = nn.Linear(vocab_size, embed_dim, bias=False)
+        # self.embeddings = nn.Linear(vocab_size, embed_dim, bias=False)
+        self.embeddings = nn.Embedding(vocab_size, embed_dim, padding_idx=padding_idx)
 
         # Returns BxTxD
         self.transformer = nn.TransformerEncoder(
@@ -58,7 +59,6 @@ class OurGAN_D(nn.Module):
         self.init_params()
 
         self.pos_encoding = self.positional_encoding()
-        print(self.pos_encoding.shape)
     
     def positional_encoding(self):
         # From Assignment 3
