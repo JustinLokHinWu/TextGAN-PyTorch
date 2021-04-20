@@ -26,7 +26,7 @@ class OurGANInstructor(BasicInstructor):
         self.gpu = cfg.CUDA
 
         # Gradient penalty # TODO consider moving to cfg
-        self.gp_lambda = 5
+        self.gp_lambda = 10
 
         # generator, discriminator
         self.gen = OurGAN_G(cfg.mem_slots, cfg.num_heads, cfg.head_size, cfg.gen_embed_dim, cfg.gen_hidden_dim,
@@ -135,8 +135,8 @@ class OurGANInstructor(BasicInstructor):
             _, d_loss = get_losses(d_out_real, d_out_fake, cfg.loss_type)
 
             # Add gradient penalty
-            # gp = self.calc_gradient_penalty(self.dis, real_samples, gen_samples, cfg.batch_size)
-            # d_loss = d_loss + gp
+            gp = self.calc_gradient_penalty(self.dis, real_samples, gen_samples, cfg.batch_size)
+            d_loss = d_loss + gp
 
             self.optimize(self.dis_opt, d_loss, self.dis)
             total_loss += d_loss.item()
