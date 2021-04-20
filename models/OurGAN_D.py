@@ -87,6 +87,8 @@ class OurGAN_D(nn.Module):
         emb = self.embeddings(inp) # batch_size * max_seq_len * embed_dim
 
         seqlen = inp.size(1)
+
+        print(emb.shape)
         emb = emb + self.pos_encoding[:seqlen]
 
         trans = self.transformer(emb) # batch * max_seq_len * embed_dim
