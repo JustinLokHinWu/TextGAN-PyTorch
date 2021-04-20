@@ -29,7 +29,7 @@ def plt_data(data, step, title, c_id, savefig=False):
     x = [i for i in range(step)]
     plt.plot(x, data, color=color_list[c_id], label=title)
     if savefig:
-        plt.savefig('savefig/' + title + '.png')
+        plt.savefig(title + '.png')
 
 
 def get_log_data(filename):
