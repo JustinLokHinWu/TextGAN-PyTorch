@@ -30,7 +30,6 @@ class OurGAN_D(nn.Module):
         self.embed_dim = embed_dim
         self.max_seq_len = max_seq_len
         self.gpu = gpu
-        # self.feature_dim = sum(dis_num_filters) 
 
         self.embeddings = nn.Linear(vocab_size, embed_dim, bias=False)
 
@@ -40,25 +39,20 @@ class OurGAN_D(nn.Module):
             n_transformer_layers
         )
 
-        # self.convs = nn.ModuleList([
-        #     nn.Conv2d(1, n, (f, self.emb_dim_single), stride=(1, self.emb_dim_single)) for (n, f) in
-        #     zip(dis_num_filters, dis_filter_sizes)
-        # ])
-
         # TODO consider adding activation/normalization?
-        self.highway = nn.Sequential(
+        self.fc1 = nn.Sequential(
             nn.Linear(self.embed_dim * self.max_seq_len, self.embed_dim),
-            nn.ReLU()
+            nn.LeakyReLU(0.2)
         )
-        self.feature2out = nn.Sequential(
+        self.fc2 = nn.Sequential(
+            nn.Dropout(dropout),
             nn.Linear(self.embed_dim, 100),
-            nn.ReLU()
+            nn.LeakyReLU(0.2)
         )
-        self.out2logits = nn.Sequential(
+        self.fc3 = nn.Sequential(
             nn.Linear(100, 1),
             nn.Sigmoid()
         )
-        # self.dropout = nn.Dropout(dropout)
 
         self.init_params()
 
@@ -94,9 +88,9 @@ class OurGAN_D(nn.Module):
 
         trans = self.transformer(emb) # batch * max_seq_len * embed_dim
 
-        x = self.highway(trans.flatten(start_dim=1)) #life is a highway.
-        x = self.feature2out(x)
-        x = self.out2logits(x)
+        x = self.fc1(trans.flatten(start_dim=1)) #life is a highway.
+        x = self.fc2(x)
+        x = self.fc3(x)
         # logits = self.out2logits(pred).squeeze(1)  # [batch_size * num_rep]
 
         # # cons = [F.relu(conv(emb)) for conv in self.convs]  # [batch_size * num_filter * (seq_len-k_h+1) * num_rep]
