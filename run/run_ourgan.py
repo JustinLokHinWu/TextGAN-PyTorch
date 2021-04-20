@@ -39,7 +39,7 @@ oracle_pretrain = int(True)
 gen_pretrain = int(False)
 dis_pretrain = int(False)
 MLE_train_epoch = 20 # TODO undo
-ADV_train_epoch = 200
+ADV_train_epoch = 1000
 tips = 'OurGAN experiments'
 
 # ===Oracle or Real===
