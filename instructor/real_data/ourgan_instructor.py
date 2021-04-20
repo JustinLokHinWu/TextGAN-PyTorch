@@ -25,7 +25,7 @@ class OurGANInstructor(BasicInstructor):
 
         self.gpu = cfg.CUDA
 
-        # Gradient penalty # TODO consider moving to cfg
+        # Gradient penalty
         self.gp_lambda = 10
 
         # generator, discriminator

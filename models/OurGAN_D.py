@@ -45,7 +45,6 @@ class OurGAN_D(nn.Module):
             norm=nn.LayerNorm(self.embed_dim)
         )
 
-        # TODO consider adding activation/normalization?
         self.fc1 = nn.Sequential(
             nn.Linear(self.embed_dim * self.max_seq_len, self.embed_dim),
             nn.LeakyReLU(0.2)
