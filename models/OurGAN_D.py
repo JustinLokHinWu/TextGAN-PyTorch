@@ -32,7 +32,10 @@ class OurGAN_D(nn.Module):
         self.gpu = gpu
 
         # self.embeddings = nn.Linear(vocab_size, embed_dim, bias=False)
-        self.embeddings = nn.Embedding(vocab_size, embed_dim, padding_idx=padding_idx)
+        self.embeddings = nn.Sequential(
+            nn.Linear(vocab_size, embed_dim, bias=False),
+            nn.Tanh()
+        )
 
         # Returns BxTxD
         self.transformer = nn.TransformerEncoder(
@@ -88,7 +91,6 @@ class OurGAN_D(nn.Module):
 
         seqlen = inp.size(1)
 
-        print(emb.shape)
         emb = emb + self.pos_encoding[:seqlen]
 
         trans = self.transformer(emb) # batch * max_seq_len * embed_dim
