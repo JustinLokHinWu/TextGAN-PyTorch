@@ -67,15 +67,13 @@ class OurGAN_D(nn.Module):
         sin_vals = torch.sin(sincos_term)
         cos_vals = torch.cos(sincos_term)
 
-        encodings = torch.empty((self.max_seq_len, self.embed_dim))
+        encodings = torch.zeros((self.max_seq_len, self.embed_dim))
         encodings[:, 0::2] = sin_vals
         encodings[:, 1::2] = cos_vals
 
         # Seq len x Embedding dimension
         if self.gpu:
             encodings = encodings.cuda()
-        encodings = torch.Variable(encodings)
-
         return encodings
 
     def forward(self, inp):
