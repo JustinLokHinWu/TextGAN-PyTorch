@@ -36,7 +36,8 @@ class OurGAN_D(nn.Module):
         # Returns BxTxD
         self.transformer = nn.TransformerEncoder(
             nn.TransformerEncoderLayer(embed_dim, nhead=n_heads),
-            n_transformer_layers
+            n_transformer_layers,
+            norm=nn.LayerNorm(self.embed_dim)
         )
 
         # TODO consider adding activation/normalization?
