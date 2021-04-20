@@ -1,3 +1,15 @@
+# CSC413 Final Project: Text Generation using Relational Memory and Transformer Discriminators
+<!-- TODO choose title -->
+Our model builds on **RelGAN** - [RelGAN: Relational Generative Adversarial Networks for Text Generation](https://openreview.net/forum?id=rJedV3R5tm). We build on top of the [TextGan repository](https://github.com/williamSYSU/TextGAN-PyTorch), and use much of their RelGAN implementation and test/train code as the basis of our model. Our primary contribution is a novel discriminator architecture, using multihead-attention instead of convolution for extracting and processing sentence features.
+
+## Run instructions
+To train the model on the image_coco dataset, run the following command:
+```
+cd run
+python3 run_ourgan.py 1 0
+```
+
+
 # TextGAN-PyTorch
 
 TextGAN is a PyTorch framework for Generative Adversarial Networks (GANs) based text generation models, including general text generation models and category text generation models. TextGAN serves as a benchmarking platform to support research on GAN-based text generation models. Since most GAN-based text generation models are implemented by Tensorflow, TextGAN can help those who get used to PyTorch to enter the text generation field faster.
