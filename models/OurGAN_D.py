@@ -60,21 +60,22 @@ class OurGAN_D(nn.Module):
         self.pos_encoding = self.positional_encoding()
     
     def positional_encoding(self):
-        p_idx = torch.arange(self.max_seq_len)[..., None]
-        d_idx = torch.arange(self.embed_dim//2)[None, ...]
-        sincos_term = p_idx / 10000**(2.0 * d_idx / self.embed_dim)
+        # From Assignment 3
+        pos_indices = torch.arange(self.max_seq_len)[..., None]
+        dim_indices = torch.arange(self.embed_dim//2)[None, ...]
+        exponents = (2*dim_indices).float()/(self.embed_dim)
+        trig_args = pos_indices / (10000**exponents)
+        sin_terms = torch.sin(trig_args)
+        cos_terms = torch.cos(trig_args)
 
-        sin_vals = torch.sin(sincos_term)
-        cos_vals = torch.cos(sincos_term)
+        pos_encodings = torch.zeros((self.max_seq_len, self.embed_dim))
+        pos_encodings[:, 0::2] = sin_terms
+        pos_encodings[:, 1::2] = cos_terms
 
-        encodings = torch.zeros((self.max_seq_len, self.embed_dim))
-        encodings[:, 0::2] = sin_vals
-        encodings[:, 1::2] = cos_vals
-
-        # Seq len x Embedding dimension
         if self.gpu:
-            encodings = encodings.cuda()
-        return encodings
+            pos_encodings = pos_encodings.cuda()
+
+        return pos_encodings
 
     def forward(self, inp):
         """
